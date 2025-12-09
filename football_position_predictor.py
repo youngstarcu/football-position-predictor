@@ -10,7 +10,6 @@ warnings.filterwarnings('ignore')
 # Obsługa TensorFlow
 try:
     import tensorflow as tf
-
     KERAS_AVAILABLE = True
 except ImportError:
     KERAS_AVAILABLE = False
@@ -25,170 +24,201 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# CSS + Font Awesome
+# CSS
 st.markdown("""
 <!-- Font Awesome CDN -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
-    /* Główne tło gradientowe */
+    /* Główne tło */
     .stApp {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #4c51bf 0%, #5a3d8a 100%);
     }
 
-    /* Główny kontener */
     .main .block-container {
         padding-top: 2rem;
         padding-bottom: 2rem;
         max-width: 1400px;
     }
 
-    /* Karty z cieniami */
+    /* Białe karty */
     .metric-card {
-        background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.9) 100%);
+        background: linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.95) 100%);
         border-radius: 20px;
         padding: 1.5rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        border: 1px solid rgba(255,255,255,0.3);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        border: 2px solid rgba(255,255,255,0.5);
         backdrop-filter: blur(10px);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     .metric-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.5);
     }
 
-    /* Gradient card */
+    /* Tekst w białych kartach */
+    .metric-card h1,
+    .metric-card h2,
+    .metric-card h3,
+    .metric-card p,
+    .metric-card span {
+        color: #111827 !important;
+    }
+
+    /* Fioletowe karty */
     .gradient-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #4c51bf 0%, #5a3d8a 100%);
         border-radius: 20px;
         padding: 1.5rem;
         color: white;
-        box-shadow: 0 10px 30px rgba(102,126,234,0.3);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.5);
         margin-bottom: 1rem;
+        border: 2px solid rgba(255,255,255,0.2);
     }
 
-    .gradient-card-pink {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    .gradient-card-purple {
+        background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
         border-radius: 20px;
         padding: 1.5rem;
         color: white;
-        box-shadow: 0 10px 30px rgba(240,147,251,0.3);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.5);
         margin-bottom: 1rem;
+        border: 2px solid rgba(255,255,255,0.2);
     }
 
     /* Tytuły */
     h1 {
         color: white !important;
-        font-weight: 700 !important;
-        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        font-weight: 900 !important;
+        text-shadow: 0 4px 15px rgba(0,0,0,0.5);
         margin-bottom: 2rem !important;
     }
 
-    h2, h3 {
-        color: #2d3748 !important;
-        font-weight: 600 !important;
+    h2 {
+        color: white !important;
+        font-weight: 800 !important;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    h3 {
+        color: white !important;
+        font-weight: 700 !important;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.3);
     }
 
     /* Przyciski */
     .stButton > button {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #1e3a8a 0%, #312e81 100%);
         color: white;
-        border: none;
+        border: 2px solid rgba(255,255,255,0.3);
         border-radius: 12px;
         padding: 0.75rem 2rem;
-        font-weight: 600;
+        font-weight: 700;
         font-size: 1.1rem;
-        box-shadow: 0 4px 15px rgba(102,126,234,0.4);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.4);
         transition: all 0.3s ease;
     }
 
     .stButton > button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(102,126,234,0.6);
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(0,0,0,0.6);
     }
 
-    /* Input fields */
+    /* Inputy */
     .stNumberInput > div > div > input {
         border-radius: 10px;
-        border: 2px solid #e2e8f0;
+        border: 2px solid #94a3b8;
         padding: 0.75rem;
-        transition: all 0.3s ease;
+        background: white;
+        font-weight: 600;
     }
 
     .stNumberInput > div > div > input:focus {
-        border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        border-color: #4c51bf;
+        box-shadow: 0 0 0 4px rgba(76,81,191,0.2);
     }
 
-    /* Labels */
+    /* Etykiety */
     label {
-        color: #2d3748 !important;
-        font-weight: 600 !important;
+        color: #1e293b !important;
+        font-weight: 700 !important;
         font-size: 0.95rem !important;
     }
 
-    /* Metryki */
+    /* Metryki - białe na fioletowym tle */
     [data-testid="stMetricValue"] {
         font-size: 2.5rem !important;
-        font-weight: 700 !important;
-        color: #2d3748 !important;
+        font-weight: 900 !important;
+        color: #ffffff !important;
+        text-shadow: 0 3px 10px rgba(0,0,0,0.6);
     }
 
     [data-testid="stMetricLabel"] {
-        font-size: 1rem !important;
-        font-weight: 600 !important;
-        color: #4a5568 !important;
+        font-size: 0.95rem !important;
+        font-weight: 800 !important;
+        color: #e5e7eb !important;
+        text-transform: uppercase;
     }
 
-    [data-testid="stMetric"] {
-        background: transparent !important;
-        padding: 0 !important;
-        margin-bottom: 1.5rem !important;
-    }
-
-    [data-testid="metric-container"] {
-        background: transparent !important;
-    }
-
-    /* Wyrównanie kolumn */
-    [data-testid="column"] {
-        padding: 0 1rem !important;
-    }
-
-    /* Odstępy */
-    [data-testid="stVerticalBlock"] > div {
-        gap: 1rem;
-    }
-
-    /* Font Awesome ikony */
+    /* Ikony Font Awesome */
     .fas, .fa, .fa-solid {
         margin-right: 0.5rem;
         vertical-align: middle;
+        text-shadow: 0 2px 6px rgba(0,0,0,0.4);
     }
 
-    h2 .fas, h3 .fas, h2 .fa-solid, h3 .fa-solid {
-        font-size: 1em;
-    }
-
-    /* Duże ikony modeli w kartach wyników */
+    /* Ikony modeli */
     .metric-card .fa-solid {
         font-size: 3rem;
-        color: #667eea;
+        color: #4c51bf;
         margin-right: 0;
+        filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
     }
 
     /* Progress bar */
     .stProgress > div > div > div {
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(90deg, #1e3a8a 0%, #312e81 100%);
     }
 
-    /* Success/Info/Warning */
-    .stSuccess, .stInfo, .stWarning {
-        background: rgba(255,255,255,0.95) !important;
-        border-radius: 12px !important;
-        border-left: 4px solid #667eea !important;
+    /* Expander - fioletowe tło */
+    [data-testid="stExpander"] {
+        background: linear-gradient(135deg, #4c51bf 0%, #5a3d8a 100%) !important;
+        border-radius: 16px !important;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
+        border: 2px solid rgba(255,255,255,0.25) !important;
+    }
+
+    [data-testid="stExpander"] p,
+    [data-testid="stExpander"] h4,
+    [data-testid="stExpander"] span {
+        color: #f9fafb !important;
+        font-weight: 600 !important;
+    }
+
+    /* Wyrównanie w expanderze */
+    [data-testid="stExpander"] [data-testid="column"] {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+
+    [data-testid="stExpander"] .stSuccess,
+    [data-testid="stExpander"] > div > div > div > div {
+        min-height: 60px;
+        display: flex;
+        align-items: center;
+    }
+
+    [data-testid="stExpander"] [data-testid="stMetric"] {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .gradient-card p, .gradient-card-purple p {
+        font-weight: 600;
+        text-shadow: 0 2px 6px rgba(0,0,0,0.3);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -201,11 +231,9 @@ POSITION_NAMES = {
     'FW': 'Napastnik (Forward)'
 }
 
-
 # Wskaźniki
 def calculate_indicators(data):
     """Automatyczne obliczanie wskaźników"""
-
     if data['90s'] > 0:
         data['Gls_per90'] = data['Gls'] / data['90s']
         data['Ast_per90'] = data['Ast'] / data['90s']
@@ -226,32 +254,27 @@ def calculate_indicators(data):
     else:
         data['Cmp%'] = 0
 
-    # offensive index - dzielone przez 90s
     if data['90s'] > 0:
         data['offensive_index'] = (data['Gls'] + data['Ast'] + (data['Sh'] / 10)) / data['90s']
     else:
         data['offensive_index'] = 0
 
-    # defensive index - dzielone przez 90s
     if data['90s'] > 0:
         data['defensive_index'] = (data['Tkl'] + data['Int']) / data['90s']
     else:
         data['defensive_index'] = 0
 
-    # passing quality
     if data['90s'] > 0 and data['Att'] > 0:
         data['passing_quality'] = (data['Cmp%'] / 100) * (data['Att'] / data['90s']) / 10
     else:
         data['passing_quality'] = 0
 
-    # goal efficiency
     if data['Sh'] > 0:
         data['goal_efficiency'] = data['Gls'] / data['Sh']
     else:
         data['goal_efficiency'] = 0
 
     return data
-
 
 # Wczytywanie modeli
 @st.cache_resource
@@ -310,14 +333,11 @@ def load_models():
 
     return models, []
 
-
 def get_predicted_position(predictions_dict):
     return max(predictions_dict, key=predictions_dict.get)
 
-
 def predict_all_models(input_data, models):
     """Wykonuje predykcję"""
-
     feature_cols = models['feature_cols']
     df = pd.DataFrame([input_data])
     df = df[feature_cols]
@@ -377,14 +397,13 @@ def predict_all_models(input_data, models):
 
     return results
 
-
 # === GŁÓWNA APKA ===
 
 # Tytuł
 st.markdown("""
 <div style='text-align: center; margin-bottom: 2rem;'>
     <h1><i class="fas fa-futbol"></i> Football Position Predictor</h1>
-    <p style='color: rgba(255,255,255,0.9); font-size: 1.1rem;'>Predykcja pozycji piłkarza przy użyciu Machine Learning</p>
+    <p style='color: white; font-size: 1.1rem; font-weight: 700; text-shadow: 0 2px 8px rgba(0,0,0,0.4);'>Predykcja pozycji piłkarza przy użyciu Machine Learning</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -398,7 +417,7 @@ if models is None:
         st.error(error)
     st.stop()
 
-# Status modeli - musi to być bo bywa różnie
+# Status modeli - musi byc
 available = sum([
     models.get('rf_models') is not None,
     models.get('xgb_models') is not None,
@@ -409,10 +428,10 @@ col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
     st.markdown(f"""
     <div class='metric-card' style='text-align: center;'>
-        <p style='margin: 0; color: #667eea; font-weight: 600;'>Status systemu</p>
-        <h2 style='margin: 0.5rem 0;'>{available}/3 modeli aktywnych</h2>
-        <div style='width: 100%; background: #e2e8f0; border-radius: 10px; height: 8px; margin-top: 1rem;'>
-            <div style='width: {available / 3 * 100}%; background: linear-gradient(90deg, #667eea, #764ba2); height: 100%; border-radius: 10px;'></div>
+        <p style='margin: 0; color: #4c51bf; font-weight: 700; text-transform: uppercase;'>Status systemu</p>
+        <h2 style='margin: 0.5rem 0; color: #1e293b;'>{available}/3 modeli aktywnych</h2>
+        <div style='width: 100%; background: #e2e8f0; border-radius: 10px; height: 10px; margin-top: 1rem; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);'>
+            <div style='width: {available / 3 * 100}%; background: linear-gradient(90deg, #1e3a8a, #312e81); height: 100%; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.3);'></div>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -424,7 +443,7 @@ with st.form("player_stats"):
     st.markdown("""
     <div class='gradient-card'>
         <h2 style='color: white; margin: 0;'><i class="fas fa-user"></i> Statystyki gracza</h2>
-        <p style='color: rgba(255,255,255,0.9); margin: 0.5rem 0 0 0;'>Wprowadź podstawowe dane - wskaźniki zostaną obliczone automatycznie</p>
+        <p style='color: white; margin: 0.5rem 0 0 0; font-weight: 600;'>Wprowadź podstawowe dane - wskaźniki zostaną obliczone automatycznie</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -477,7 +496,7 @@ if submitted:
     # Obliczone wskaźniki
     st.markdown("<br>", unsafe_allow_html=True)
     st.markdown("""
-    <div class='gradient-card-pink'>
+    <div class='gradient-card-purple'>
         <h2 style='color: white; margin: 0;'>Obliczone wskaźniki</h2>
     </div>
     """, unsafe_allow_html=True)
@@ -532,15 +551,15 @@ if submitted:
 
             st.markdown(f"""
             <div class='metric-card' style='text-align: center;'>
-                <div style='font-size: 3rem; margin-bottom: 0.5rem;'>
+                <div style='font-size: 3rem; margin-bottom: 0.5rem; display: flex; justify-content: center; align-items: center;'>
                     {model_icons.get(model_name)}
                 </div>
-                <h3 style='margin: 0;'>{model_name}</h3>
+                <h3 style='margin: 0; color: #1e293b; font-weight: 800;'>{model_name}</h3>
                 <div style='margin: 1rem 0;'>
-                    <h2 style='margin: 0;'>{POSITION_NAMES[pos]}</h2>
+                    <h2 style='margin: 0; color: #1e293b; font-weight: 900;'>{POSITION_NAMES[pos]}</h2>
                 </div>
-                <p style='color: #667eea; font-size: 1.5rem; font-weight: 700; margin: 0;'>{conf:.1%}</p>
-                <p style='color: #718096; margin: 0;'>pewność</p>
+                <p style='color: #4c51bf; font-size: 1.5rem; font-weight: 900; margin: 0;'>{conf:.1%}</p>
+                <p style='color: #64748b; margin: 0; font-weight: 700;'>pewność</p>
             </div>
             """, unsafe_allow_html=True)
 
@@ -552,23 +571,21 @@ if submitted:
         st.markdown(f"""
         <div class='gradient-card' style='text-align: center;'>
             <h2 style='color: white; margin: 0;'>KOŃCOWA DECYZJA</h2>
-            <h1 style='color: white; margin: 1rem 0;'>{POSITION_NAMES[positions[0]]}</h1>
-            <p style='color: rgba(255,255,255,0.9);'>Wszystkie modele są zgodne!</p>
+            <h1 style='color: white; margin: 1rem 0; font-weight: 900;'>{POSITION_NAMES[positions[0]]}</h1>
+            <p style='color: white; font-weight: 700;'>Wszystkie modele są zgodne!</p>
         </div>
         """, unsafe_allow_html=True)
-        st.balloons()
     else:
         from collections import Counter
-
         vote_count = Counter(positions)
         most_common = vote_count.most_common(1)[0]
 
         if most_common[1] >= 2:
             st.markdown(f"""
-            <div class='gradient-card-pink' style='text-align: center;'>
+            <div class='gradient-card-purple' style='text-align: center;'>
                 <h2 style='color: white; margin: 0;'>KOŃCOWA DECYZJA</h2>
-                <h1 style='color: white; margin: 1rem 0;'>{POSITION_NAMES[most_common[0]]}</h1>
-                <p style='color: rgba(255,255,255,0.9);'>Większość modeli ({most_common[1]}/{len(results)}) wskazuje tę pozycję</p>
+                <h1 style='color: white; margin: 1rem 0; font-weight: 900;'>{POSITION_NAMES[most_common[0]]}</h1>
+                <p style='color: white; font-weight: 700;'>Większość modeli ({most_common[1]}/{len(results)}) wskazuje tę pozycję</p>
             </div>
             """, unsafe_allow_html=True)
         else:
@@ -597,13 +614,13 @@ if submitted:
         st.markdown("<br>", unsafe_allow_html=True)
         st.markdown("""
         <div class='metric-card'>
-            <h2 style='margin-top: 0;'><i class="fas fa-chart-area"></i> Wykres porównawczy</h2>
+            <h2 style='margin-top: 0; color: #1e293b; font-weight: 800;'><i class="fas fa-chart-area"></i> Wykres porównawczy</h2>
         </div>
         """, unsafe_allow_html=True)
 
         fig = go.Figure()
         positions_order = ['GK', 'DF', 'MF', 'FW']
-        colors = ['#667eea', '#764ba2', '#f093fb']
+        colors = ['#4c51bf', '#5a3d8a', '#7c3aed']
 
         for idx, (model_name, data) in enumerate(results.items()):
             probs = data['probabilities']
@@ -613,24 +630,24 @@ if submitted:
                 theta=positions_order,
                 fill='toself',
                 name=model_name,
-                line=dict(color=colors[idx % len(colors)], width=2)
+                line=dict(color=colors[idx % len(colors)], width=3)
             ))
 
         fig.update_layout(
             polar=dict(
-                radialaxis=dict(visible=True, range=[0, 1], gridcolor='rgba(102,126,234,0.2)'),
-                bgcolor='rgba(255,255,255,0.9)'
+                radialaxis=dict(visible=True, range=[0, 1], gridcolor='rgba(76,81,191,0.3)'),
+                bgcolor='rgba(255,255,255,0.95)'
             ),
             showlegend=True,
             height=500,
             paper_bgcolor='rgba(0,0,0,0)',
-            font=dict(size=12, color='#2d3748')
+            font=dict(size=13, color='#1e293b', family='Arial Black')
         )
         st.plotly_chart(fig, use_container_width=True)
 
 # Fancy footer
 st.markdown("""
-<div style='text-align: center; margin-top: 3rem; color: rgba(255,255,255,0.7);'>
-    <p><i class="fas fa-code"></i> Dashboard by Karolina | Machine Learning Position Predictor</p>
+<div style='text-align: center; margin-top: 3rem; color: white;'>
+    <p style='font-weight: 700; text-shadow: 0 2px 8px rgba(0,0,0,0.4);'><i class="fas fa-code"></i> Dashboard by Karolina | Machine Learning Position Predictor</p>
 </div>
 """, unsafe_allow_html=True)
